@@ -1,34 +1,65 @@
-variable "region" {}
+variable "region" {
+  description = "The AWS region."
+}
+
+variable "environment" {
+  description = "The name of our environment, i.e. development."
+}
+
+variable "key_name" {
+  description = "The AWS key pair to use for resources."
+}
+
+variable "public_subnet_ids" {
+  default     = []
+  description = "The list of public subnets to populate."
+}
+
+variable "private_subnet_ids" {
+  default     = []
+  description = "The list of private subnets to populate."
+}
+
 variable "ami" {
   default = {
     "us-east-1" = "ami-f652979b"
     "us-west-1" = "ami-7c4b331c"
   }
+
+  description = "The AMIs to use for web and app instances."
 }
+
 variable "instance_type" {
-  default = "t2.micro"
+  default     = "t2.micro"
+  description = "The instance type to launch "
 }
-variable "key_name" {
-  default = "james"
+
+variable "web_instance_count" {
+  default     = 1
+  description = "The number of Web instances to create"
 }
-variable "environment" {}
-variable "vpc_id" {}
-variable "public_subnet_ids" {
-  type = "list"
+
+variable "app_instance_count" {
+  default     = 1
+  description = "The number of App instances to create"
 }
-variable "private_subnet_ids" {
-  type = "list"
+
+variable "vpc_id" {
+  description = "The VPC ID to launch in"
 }
-variable "domain" {}
-variable "web_instance_count" {}
-variable "app_instance_count" {}
+
+variable "domain" {
+  description = "The domain to use for the web service"
+}
 
 output "web_elb_address" {
   value = "${aws_elb.web.dns_name}"
 }
+
 output "web_host_addresses" {
   value = ["${aws_instance.web.*.private_ip}"]
 }
+
 output "app_host_addresses" {
   value = ["${aws_instance.app.*.private_ip}"]
 }
